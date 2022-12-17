@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}
-{{ title }}
+Последние обновления на сайте
 {% endblock %}
 {% block content %} 
      
       <!-- класс py-5 создает отступы сверху и снизу блока -->
       <div class="container py-5">     
-        <h1>{{ title }}</h1>
+        <h1>Последние обновления на сайте</h1>
         
             {% for post in posts %}
             <ul>
@@ -19,7 +19,7 @@
             </ul>
             <p>{{ post.text }}</p>    
             {% if post.group %}
-                <a href="{% url 'posts:group_posts' post.group.slug  %}">все записи группы</a>
+                <a href="{% url 'posts:group_list' post.group.slug  %}">все записи группы</a>
             {% endif %}
             {% if not forloop.last %}<hr>{% endif %}
           {% endfor %}
