@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+Все посты пользователя
+{% endblock %}
+{% block content %} 
+    <main>
+      <div class="container py-5">        
+        <h1>Все посты пользователя {{ author.get_full_name }} </h1>
+        <h3>Всего постов: {{ author.posts.count }} </h3>   
+        <article>
+          <ul>
+            <li>
+              Автор: {{ author.get_full_name }}
+            </li>
+          </ul>
+          <p>
+            {% for post in page_obj %}   
+            <p>
+                Дата публикации: {{ post.pub_date|date:"d E Y" }}
+            </p>
+            <p>{{ post.text }}</p> 
+            <p>
+                <a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>   
+            </p>
+            {% if post.group %}
+                <a href="{% url 'posts:group_list' post.group.slug  %}">все записи группы</a>
+            {% endif %}
+            {% if not forloop.last %}<hr>{% endif %}
+        {% endfor %}
+          </p>
+          
+        </article>       
+               
+        <hr>
+        <!-- Остальные посты. после последнего нет черты -->
+        <!-- Здесь подключён паджинатор -->  
+      </div>
+    </main>
+{% endblock %} 
