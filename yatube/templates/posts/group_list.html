@@ -15,13 +15,13 @@
           {% for post in page_obj %}
             <ul>
               <li>
-                Автор: {{ post.author.get_full_name }}
+                Автор: <a href="{% url 'posts:profile' post.author.username %}">{{ post.author.get_full_name }}</a>
               </li>
               <li>
                 Дата публикации: {{ post.pub_date|date:"d E Y" }}
               </li>
             </ul>
-            <p>{{ post.text }}</p>    
+            <p>{{ post.text|slice:300 }}<a href="{% url 'posts:post_detail' post.id %}"> ...</a></p>    
             {% if not forloop.last %}<hr>{% endif %}
           {% endfor %} 
           <!-- под последним постом нет линии -->

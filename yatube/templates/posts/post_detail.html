@@ -1,30 +1,32 @@
 {% extends 'base.html' %}
 {% block title %}
-Все посты пользователя  |slice:"250"
+{{ post.text|truncatechars:30 }}
 {% endblock %}
 {% block content %} 
-    <main>
+<main> 
+  <div class="container py-5"> 
       <div class="row">
         <aside class="col-12 col-md-3">
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              Дата публикации: <!-- 31 июля 1854 --> 
-            </li>
-            <!-- если у поста есть группа -->   
+              Дата публикации: {{ post.pub_date|date:'d E Y' }}
+            </li> 
+            {% if post.group %}  
             <li class="list-group-item">
-              Группа: <!-- Название группы -->
-              <a href="<!-- -->">
+              Группа: {{ group.title }}
+              <a href="{% url 'posts:group_list' post.group.slug %}">
                 все записи группы
               </a>
             </li>
+            {% endif %} 
             <li class="list-group-item">
-              Автор: <!--Лев Толстой-->
+              Автор: {{post.author.get_full_name }}
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
-              Всего постов автора:  <span ><!-- --></span>
+              Всего постов автора:  {{ author.posts.count }}
             </li>
             <li class="list-group-item">
-              <a href="<!-- -->">
+              <a href="{% url 'posts:profile' post.author.username %}">
                 все посты пользователя
               </a>
             </li>
@@ -32,19 +34,15 @@
         </aside>
         <article class="col-12 col-md-9">
           <p>
-           <!--
-            [Фокшаны.] Еще переходъ до Фокшанъ, во время котораго я ѣхалъ съ 
-            Монго. Человѣкъ пустой, но съ твердыми, хотя и ложными убѣжденіями.
-            Генерал[у] по этому должно быть случаю, угодно было спрашивать о мое
-            мъ здоровьи.
-            Свинья! К[о]вырялъ носъ и ничего не написалъ — вотъ 2 упрека за 
-            нын[ѣшній]     день. Послѣдній упрекъ становится слишкомъ частъ, 
-            хотя походъ и можетъ служить въ немъ отчасти извиненіемъ. 
-            Отношенія мои съ товарищами становятся такъ пріятны, что мнѣ 
-            жалко бросить штабъ. Здоровье кажется (2) лучше. 
-           --> 
+            {{ post.text|linebreaksbr }}
           </p>
+          {% if user.id == post.author.id %}
+             <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+             редактировать запись 
+          </a>
+          {% endif %} 
         </article>
       </div> 
-    </main>
-    {% endblock %} 
+    </div> 
+  </main>
+{% endblock %} 

@@ -83,11 +83,13 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id) 
+    post = get_object_or_404(Post, id=post_id)
+    author =  get_object_or_404(User, username=post.author)
     # Здесь код запроса к модели и создание словаря контекста
     context = {
         'post': post,
-        'years': years
+        'years': years,
+        'author':author
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -111,31 +113,21 @@ def post_create(request):
     return render(request, template, context) 
 
 
-@login_required 
+@login_required
 def post_edit(request, post_id): 
-    post = get_object_or_404(Post, id=post_id) 
+    post = get_object_or_404(Post, id=post_id)
     form = PostForm(request.POST or None, instance=post)
 
-    if request.user != post.author: 
-        return redirect('posts:post_detail', post_id) 
+    if request.user != post.author:
+        return redirect('posts:post_detail', post_id)
 
-    if form.is_valid(): 
-        form.save() 
-        return redirect('posts:post_detail', post_id) 
+    if form.is_valid():
+        form.save()
+        return redirect('posts:post_detail', post_id)
 
-    context = { 
-        'form': form, 
-        'is_edit': True, 
-        'post': post,
-        'years': years
-    } 
-
-    return render(request, 'posts/create_post.html', context)
-"""
-def group_list(request):
-    template = 'posts/group_list.html'
     context = {
-        'title':"Здесь будет информация о группах проекта Yatube"
+        'form': form,
+        'is_edit': True,
+        'post': post,
     }
-    return render(request, template, context)
-"""
+    return render(request, 'posts/create_post.html', context)
